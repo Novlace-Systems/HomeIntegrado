@@ -3,16 +3,26 @@ import '../styles/Profile.css'; // Caminho para o CSS
 import { HouseIcon, MessageCircleHeart, User, Star } from 'lucide-react';
 import { FavoritesContext } from '../FavoritesContext';
 import { Link } from 'react-router-dom'; // Importando o Link
+import { db } from '../FirebaseConfig';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+
 
 const ProfilePage = () => {
   const [favoriteCommunities, setFavoriteCommunities] = useState([]);
 
+  const userEmail = 'usuario@exemplo.com';
+
   useEffect(() => {
-    const storedFavorites = localStorage.getItem('favoritedCommunities');
-    if (storedFavorites) {
-      setFavoriteCommunities(JSON.parse(storedFavorites));
-    }
+    const fetchFavorites = async () => {
+      const q = query(collection(db, 'favorites'), where('userEmail', '==', userEmail));
+      const querySnapshot = await getDocs(q);
+      const favorites = querySnapshot.docs.map(doc => doc.data());
+      setFavoriteCommunities(favorites);
+    };
+  
+    fetchFavorites();
   }, []);
+  
 
   return (
     <div className="profile-page">
