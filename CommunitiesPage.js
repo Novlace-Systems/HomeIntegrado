@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import '../styles/Comunidades.css'; // Caminho para o CSS
 import { Search, Star, User, MessageCircleHeart, HouseIcon } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Importando o Link
+import { db } from '../FirebaseConfig';
+import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
+
 
 const CommunitiesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,23 +31,24 @@ const CommunitiesPage = () => {
     }
   ];
 
-  const toggleFavorite = (communityId, communityTitle, communityImage) => {
-    let updatedFavorites;
+  const toggleFavorite = async (communityId, communityTitle, communityImage) => {
+    const userId = 'usuario-logado-id'; // Substitua pelo ID real do usuário logado
+    const communityRef = doc(db, 'favorites', `${userId}_${communityId}`);
     
     if (favoritedCommunities.some(c => c.id === communityId)) {
-      updatedFavorites = favoritedCommunities.filter(c => c.id !== communityId);
+      await deleteDoc(communityRef);
+      setFavoritedCommunities(prev => prev.filter(c => c.id !== communityId));
     } else {
       const newFavorite = {
         id: communityId,
         name: communityTitle,
-        imageSrc: communityImage
+        imageSrc: communityImage,
+        userId,
       };
-      updatedFavorites = [...favoritedCommunities, newFavorite];
+      await setDoc(communityRef, newFavorite);
+      setFavoritedCommunities(prev => [...prev, newFavorite]);
     }
-
-    setFavoritedCommunities(updatedFavorites);
-    localStorage.setItem('favoritedCommunities', JSON.stringify(updatedFavorites));
-  };
+  };  
 
   const filteredCommunities = communities.filter(community =>
     community.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -52,7 +56,7 @@ const CommunitiesPage = () => {
 
   return (
     <div className="communities-container">
-      {/* Sidebar permanece fixa */}
+      {/* Menu permanece fixo */}
       <div className="sidebar">
         <div className="logo-container">
           <img src="logoaelin.png" style={{ width: '70px', height: '70px' }} alt="Logo Aelin" />
