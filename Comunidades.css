@@ -96,7 +96,7 @@
 }
 
 .search-input {
-  width: 50%;
+  width: 50%; /* Mantenha a barra de pesquisa com 50% de largura */
   padding: 15px 40px;
   border: transparent;
   border-radius: 30px;
@@ -129,26 +129,24 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 150%; /* Ajuste a largura para centralizar */
-  max-width: 1000px;
+  width: 50%; /* Alinha a largura dos cards com a barra de pesquisa */
+  max-width: 800px;
   margin: 0 auto;
-  align-items: center; /* Centraliza os itens dentro do contêiner */
+  align-items: center;
 }
 
 /* Estilo dos Cards da Comunidade */
 
 .community-card { 
   display: flex;
-  background: white; /* Fundo branco */
-  border-radius: 15px; /* Bordas arredondadas */
+  background: white;
   overflow: hidden;
-  height: 150px; /* Aumenta a altura para acomodar a imagem maior */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais aparente */
-  width: 90%; 
-  max-width: 600px;
-  margin: 0 auto;
+  height: 150px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 145%; /* Ocupa toda a largura do container da lista */
   align-items: center;
   padding: 10px;
+  border-radius: 15px;
 }
 
 /* Estilo das Imagens */
