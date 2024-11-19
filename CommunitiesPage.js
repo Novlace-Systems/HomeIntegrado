@@ -1,54 +1,44 @@
-import React, { useState } from 'react';
-import '../styles/Comunidades.css'; // Caminho para o CSS
+import React, { useState, useEffect } from 'react';
+import '../styles/Comunidades.css';
 import { Search, Star, User, MessageCircleHeart, HouseIcon } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Importando o Link
-import { db } from '../FirebaseConfig';
-import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
-
+import { Link } from 'react-router-dom';
 
 const CommunitiesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [favoritedCommunities, setFavoritedCommunities] = useState(() => {
-    const storedFavorites = localStorage.getItem('favoritedCommunities');
-    return storedFavorites ? JSON.parse(storedFavorites) : [];
+    const savedFavorites = localStorage.getItem('favoritedCommunities');
+    return savedFavorites ? JSON.parse(savedFavorites).filter(fav => fav && fav.id) : [];
   });
 
   const communities = [
-    {
-      id: 1,
-      title: 'Sinais de um relacionamento Abusivo',
-      image: '/relacioabusivo.jpeg',
-    },
-    {
-      id: 2,
-      title: 'Aprenda sobre auto cuidado e Autodefesa',
-      image: '/mulherskincuidado.jpg',
-    },
-    {
-      id: 3,
-      title: 'Mulheres na Tecnologia',
-      image: '/mulhertecn.jpg',
-    }
+    { id: 1, title: 'Sinais de um relacionamento Abusivo', image: '/relacioabusivo.jpeg' },
+    { id: 2, title: 'Aprenda sobre auto cuidado e Autodefesa', image: '/mulherskincuidado.jpg' },
+    { id: 3, title: 'Mulheres na Tecnologia', image: '/mulhertecn.jpg' },
+    { id: 4, title: 'Casa da Mulher', image: '/casadamulher.jpg' },
+    { id: 5, title: 'Empoderamento Feminino', image: '/woman.jpg' },
+    { id: 6, title: 'Rede de Apoio', image: '/mulheres.jpg' },
+    { id: 7, title: 'Maternidade Consciente', image: '/maternidade.jpg' },
+    { id: 8, title: 'Combate a Violência', image: '/violencia.png' }
   ];
+  
+  useEffect(() => {
+    localStorage.setItem('favoritedCommunities', JSON.stringify(favoritedCommunities));
+  }, [favoritedCommunities]);
 
-  const toggleFavorite = async (communityId, communityTitle, communityImage) => {
-    const userId = 'usuario-logado-id'; // Substitua pelo ID real do usuário logado
-    const communityRef = doc(db, 'favorites', `${userId}_${communityId}`);
-    
-    if (favoritedCommunities.some(c => c.id === communityId)) {
-      await deleteDoc(communityRef);
-      setFavoritedCommunities(prev => prev.filter(c => c.id !== communityId));
+  const toggleFavorite = (community) => {
+    const isFavorited = favoritedCommunities.some(fav => fav && fav.id === community.id);
+    const formattedCommunity = {
+      src: community.image,
+      title: community.title,
+      id: community.id
+    };
+
+    if (isFavorited) {
+      setFavoritedCommunities(favoritedCommunities.filter(fav => fav && fav.id !== community.id));
     } else {
-      const newFavorite = {
-        id: communityId,
-        name: communityTitle,
-        imageSrc: communityImage,
-        userId,
-      };
-      await setDoc(communityRef, newFavorite);
-      setFavoritedCommunities(prev => [...prev, newFavorite]);
+      setFavoritedCommunities([...favoritedCommunities, formattedCommunity]);
     }
-  };  
+  };
 
   const filteredCommunities = communities.filter(community =>
     community.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,7 +46,6 @@ const CommunitiesPage = () => {
 
   return (
     <div className="communities-container">
-      {/* Menu permanece fixo */}
       <div className="sidebar">
         <div className="logo-container">
           <img src="logoaelin.png" style={{ width: '70px', height: '70px' }} alt="Logo Aelin" />
@@ -68,7 +57,7 @@ const CommunitiesPage = () => {
           <button className="menu-button">
             <MessageCircleHeart className="icon-menu" />
           </button>
-          <Link to="/profile">
+          <Link to="/perfil">
             <button className="menu-button">
               <User className="icon-menu" />
             </button>
@@ -76,13 +65,11 @@ const CommunitiesPage = () => {
         </div>
       </div>
 
-      {/* Conteúdo principal dentro do container grandão */}
       <main className="main-content">
         <div className='container-principal'>
           <h1 className="main-title">Encontre lugares de fala aqui!</h1>
           <p className="subtitle">Faça já parte de uma das nossas comunidades.</p>
 
-          {/* Barra de pesquisa */}
           <div className="search-container">
             <Search className="search-icon" />
             <input
@@ -94,7 +81,6 @@ const CommunitiesPage = () => {
             />
           </div>
 
-          {/* Lista de comunidades */}
           <div className="communities-list">
             {filteredCommunities.length > 0 ? (
               filteredCommunities.map(community => (
@@ -103,7 +89,7 @@ const CommunitiesPage = () => {
                     src={community.image} 
                     alt={community.title} 
                     className="community-image" 
-                    style={{ width: '150px', height: '150px' }} /* Define tamanho para todas as imagens */
+                    style={{ width: '150px', height: '150px' }} 
                   />
                   <div className="community-info">
                     <h2 className="community-title">{community.title}</h2>
@@ -111,10 +97,9 @@ const CommunitiesPage = () => {
                       <button className="espie-button">
                         Espie e Participe
                       </button>
-                      {/* Estrela interativa */}
                       <Star
-                       className={`star-icon ${favoritedCommunities.some(c => c.id === community.id) ? 'filled' : ''}`}
-                       onClick={() => toggleFavorite(community.id, community.title, community.image)}
+                        className={`star-icon ${favoritedCommunities.some(fav => fav && fav.id === community.id) ? 'filled' : ''}`}
+                        onClick={() => toggleFavorite(community)}
                       />
                     </div>
                   </div>
