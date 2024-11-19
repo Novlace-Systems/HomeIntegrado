@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+/* Estilos para o corpo e o container principal */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e7e1f7;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Estilos do perfil */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: contain;
+  padding: 6px;
+  background-color: #d6cbf3;
+  margin-bottom: 8px;
+}
+
+/* Estilo para o nome "Rayssa Maravilhosa" */
+.profile-name {
+  font-family: 'Quicksand', sans-serif;
+  color: #330066;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1px;
+}
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: 140px 140px;
+  gap: 20px;
+  margin-bottom: 30px;
+  justify-content: center;
+  transform: translateX(20px); /* Ajusta o valor para mover mais ou menos */
+}
+
+
+/* Ajusta o contêiner de seleção */
+.selection-container {
+  width: 90px; /* Diminui o contêiner */
+  height: 90px;
+  border-radius: 26px; /* Arredonda as bordas */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border 0.3s;
+}
+
+/* Reduz a borda para deixá-la mais próxima do avatar */
+.selection-container.selected {
+  border: 3px solid #4a346e;
+}
+
+/* Aumenta o tamanho dos avatares de seleção */
+.selection-item {
+  width: 85px; /* Aumenta o tamanho dos avatares na grade de seleção */
+  height: 85px;
+  object-fit: contain;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.selection-container.move-left {
+  position: relative;
+  left: -2px;
+}
+
+.selection-item:hover {
+  transform: scale(1.1);
+}
+
+.save-button {
+  background-color: #25004a;
+  color: #fff;
+  padding: 16px 44px;
+  font-size: 1em;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #3a2653;
+}
